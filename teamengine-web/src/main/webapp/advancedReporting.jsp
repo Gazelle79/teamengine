@@ -30,7 +30,7 @@ Skipped: #666
     border: none;
     text-align: left;
     outline: none;
-    font-size: 12px;
+    font-size: 14px;
     transition: 0.4s;
 }
 
