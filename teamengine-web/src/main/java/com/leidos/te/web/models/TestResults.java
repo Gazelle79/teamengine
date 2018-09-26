@@ -19,7 +19,7 @@ public class TestResults
 	@JacksonXmlProperty(localName = "total", isAttribute = true)
 	private int totalTests = 0;
 	
-	
+	//Testing.
 	@JacksonXmlProperty(localName = "reporter-output")
     @JacksonXmlElementWrapper(useWrapping = false)
 	private String reporterOutput = "";
