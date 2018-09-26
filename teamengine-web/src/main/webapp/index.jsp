@@ -18,6 +18,8 @@
       or 
       <a href="register.jsp" style="text-decoration: none">
         <span class="box">Create an account</span></a>
+ 
+ 
       </section>  
         <%@ include file="footer.jsp" %>
     </body>
