@@ -14,3 +14,4 @@ release.properties
 
 # Packer output
 packer_cache/
+/bin/

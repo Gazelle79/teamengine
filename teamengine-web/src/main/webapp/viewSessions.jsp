@@ -1,14 +1,16 @@
-<%@page import="java.util.Collection"%>
-<%@ page
+<%@page import="java.util.Collection"
   language="java"
   session="false"
-  import="java.io.File, javax.xml.parsers.*, java.util.Arrays, com.occamlab.te.web.*, java.util.List, java.util.ArrayList"
-%><%!
+  import="java.io.File, javax.xml.parsers.*, java.util.Arrays, com.occamlab.te.web.*, com.ledios.te.web.controllers.*, java.util.List, java.util.ArrayList"
+%>
+
+<%!
   Config Conf;
   DocumentBuilder DB;
   List<TestSession> testData;
 
-  public void jspInit() {
+  public void jspInit() 
+  {
     Conf = new Config();
     try {
       DB = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -29,7 +31,10 @@
     Contributor(s): No additional contributors to date
   
    +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+   
+   
   <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+       	
     <head>
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
       <title>Test Sessions</title>
@@ -71,6 +76,7 @@
       <br />
 	  <br />
 	  
+	  
       <p>
         <table border="0"><tr><td><table class="session-table">
                 <%  File userdir = new File(Conf.getUsersDir(), request.getRemoteUser());
@@ -98,7 +104,13 @@
                   testData = ts.getSortedMap(testData);
                   for (TestSession testSession : testData) {
                 	  out.println("<tr style='height:23px;'>");
-                      out.println("<td><a href=\"viewSessionLog.jsp?session=" + testSession.getSessionId() + "\">" + testSession.getSessionId() + "</a></td>");
+                      out.println("<td>"
+                	  		  + testSession.getSessionId() + " <a href=\"viewSessionLog.jsp?session=" + testSession.getSessionId() + "\"> Standard report </a>"
+                	  		  + " || "
+                	  		  + "<a href=\"advancedReporting?sessionId=" + testSession.getSessionId() + "\"> Advanced report </a>"
+                    		  + "</td> ");
+                      
+                      
                       out.println("<td>" + testSession.getSourcesName().split("_")[1] + "</td>");
                       out.println("<td>" + testSession.getSourcesName().split("_")[2] + "</td>");
                       out.println("<td>" + testSession.getCurrentDate() + "</td>");
@@ -132,6 +144,8 @@
         </table>
         <br/>
       </p>
+
+      
       <%@ include file="footer.jsp" %>
     </body>
   </html>

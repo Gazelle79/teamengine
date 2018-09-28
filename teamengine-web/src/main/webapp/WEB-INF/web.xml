@@ -92,6 +92,21 @@
     <servlet-name>test</servlet-name>
     <url-pattern>/test</url-pattern>
   </servlet-mapping>
+  
+  
+  <servlet>
+    <servlet-name>AdvancedReportingServlet</servlet-name>
+    <servlet-class>com.leidos.te.web.controllers.AdvancedReportingServlet</servlet-class>
+  </servlet> 
+  
+  
+  <servlet-mapping>
+    <servlet-name>AdvancedReportingServlet</servlet-name>
+    <url-pattern>/advancedReporting</url-pattern>
+  </servlet-mapping>
+  
+  
+  
   <servlet-mapping>
     <servlet-name>monitor</servlet-name>
     <url-pattern>/monitor/*</url-pattern>
@@ -120,9 +135,14 @@
     <servlet-name>emailLog</servlet-name>
     <url-pattern>/emailLog</url-pattern>
   </servlet-mapping>
+  
+  
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>user-specific</web-resource-name>
+      <url-pattern>/advancedReporting.jsp</url-pattern>
+  
+  
       <url-pattern>/deleteSession</url-pattern>
       <url-pattern>/renameSession</url-pattern>
       <url-pattern>/complianceTesting</url-pattern>
