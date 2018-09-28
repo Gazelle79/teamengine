@@ -84,7 +84,7 @@ Skipped: #666
 			%>
 				<table id="ResultTables" style="width: 400px;">
 				<tr><td><b>Test Name: </b></td><td><%= thisTestSuite.getName() %></td></tr>					
-				<tr><td><b>URL: </b></td><td> <%= thisTestSuite.getTestUrl() %>r</td></tr>				
+				<%-- <tr><td><b>URL: </b></td><td> <%= thisTestSuite.getTestUrl() %></td></tr>  --%>				
 				<tr><td><b>   </b></td><td>   </td></tr>
 				<tr><td><b>Start Time: </b></td><td><%= thisTestSuite.getStartTime() %></td></tr>
 				<tr><td><b>End Time: </b></td><td><%= thisTestSuite.getEndTime() %></td></tr>

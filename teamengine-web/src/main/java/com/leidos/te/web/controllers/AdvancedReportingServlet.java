@@ -23,7 +23,7 @@ public class AdvancedReportingServlet extends javax.servlet.http.HttpServlet imp
 	
 	String sessionId = "";
 	boolean allDirectoriesCreated = false;
-	
+	private XmlMapper xmlMapper = new XmlMapper();
 	
 	private File userLogDirectory = null;
 	private File htmlReportDirectory = null;
@@ -32,6 +32,11 @@ public class AdvancedReportingServlet extends javax.servlet.http.HttpServlet imp
 	private File testNgResultsDirectory = null;
 	private String testNgResultsPath = ""; //path to Test Results NG.xml
 	
+	private File[] htmlReportDirectories = null;
+	private File[] resultReportDirectories = null;
+	private File[] testNgDirectories = null;
+	private File[] testNgResultsDirectories = null;
+	private String[] testNgResultsPaths = null; //path to Test Results NG.xml
 	
 	public void init() throws ServletException 
 	{
@@ -46,9 +51,8 @@ public class AdvancedReportingServlet extends javax.servlet.http.HttpServlet imp
 		sessionId = request.getParameter("sessionId");
 		
 		String userName = request.getRemoteUser();
-		allDirectoriesCreated = this.getUserDirectories(userName);
+		allDirectoriesCreated = this.getUserDirectoriesForSingleSession(userName);
 		TestResults testResults = this.GetTestResults();
-		boolean testResultsCleaned = this.SortTestResults(testResults);
 				
 		//Pass Beans
 		request.setAttribute("sessionId", sessionId);
@@ -66,7 +70,7 @@ public class AdvancedReportingServlet extends javax.servlet.http.HttpServlet imp
 		this.doGet(request, response);
 	}
 		
-	private boolean getUserDirectories(String userName)
+	private boolean getUserDirectoriesForSingleSession(String userName)
 	{
 		boolean allDirectoriesCreated = false;
 		
@@ -112,11 +116,36 @@ public class AdvancedReportingServlet extends javax.servlet.http.HttpServlet imp
 		
 	public TestResults GetTestResults() throws IOException
 	{
-		XmlMapper xmlMapper = new XmlMapper();
+		xmlMapper = new XmlMapper();
 		String xml = inputStreamToString(new FileInputStream(testNgResultsPath));
 		TestResults testNgResults = xmlMapper.readValue(xml, TestResults.class);
+		if(testNgResults.getTotalTestCount() > 0)
+		{
+			this.SortTestResults(testNgResults);
+		}	
 		return testNgResults;
 	}
+	
+	//TODO: Come back to getting URI parameter using Jackson.
+	private void GetTestUrl(TestResults thisTestResults) throws IOException
+	{
+		if(thisTestResults.getTestSuites().size() > 0)
+		{
+			File xmlLogFilepath = new File(userLogDirectory.getAbsolutePath() + System.getProperty("file.separator") + "log.xml");
+			if (xmlLogFilepath.exists())
+			{
+				xmlMapper = new XmlMapper();
+				String xml = inputStreamToString(new FileInputStream(xmlLogFilepath));
+				for(TestSuite thisTestSuite : thisTestResults.getTestSuites())
+				{  
+					thisTestSuite = xmlMapper.readValue(xml, TestSuite.class);
+				}
+			
+			}
+		}
+	}
+
+	
 	
 	private static String inputStreamToString(InputStream is) throws IOException 
 	{
@@ -130,19 +159,6 @@ public class AdvancedReportingServlet extends javax.servlet.http.HttpServlet imp
 	    br.close();
 	    return sb.toString();
 	}
-	
-	
-	/*private void getTestUrl(TestResults thisTestResults) throws IOException
-	{
-		File xmlLogFilepath = new File(userLogDirectory.getAbsolutePath() + System.getProperty("file.separator") + "log.xml");
-		if (xmlLogFilepath.exists())
-		{
-			XmlMapper xmlMapper = new XmlMapper();
-			String xml = inputStreamToString(new FileInputStream(xmlLogFilepath));
-			
-			
-		}
-	}*/
 	
 	/**
 	 * Make sure all Test Method Results are set to enumeration: Pass, fail or Skip.

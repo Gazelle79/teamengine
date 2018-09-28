@@ -11,15 +11,15 @@ import com.fasterxml.jackson.dataformat.xml.annotation.*;
 public class TestResults 
 {
 	@JacksonXmlProperty(localName = "skipped", isAttribute = true)
-	private int skipped = 0;
+	private int skippedTestCount = 0;
 	@JacksonXmlProperty(localName = "passed", isAttribute = true)
-	private int passed = 0;
+	private int passedTestCount = 0;
 	@JacksonXmlProperty(localName = "failed", isAttribute = true)
-	private int failed = 0;
+	private int failedTestCount = 0;
 	@JacksonXmlProperty(localName = "total", isAttribute = true)
-	private int totalTests = 0;
+	private int totalTestCount = 0;
 	
-	//Testing.
+	
 	@JacksonXmlProperty(localName = "reporter-output")
     @JacksonXmlElementWrapper(useWrapping = false)
 	private String reporterOutput = "";
@@ -29,24 +29,24 @@ public class TestResults
 	private ArrayList<TestSuite> testSuites = null;
 	
 	
-	public int getSkippedTests() 
+	public int getSkippedTestCount() 
 	{
-		return this.skipped;
+		return this.skippedTestCount;
 	}
 
-	public int getPassedTests() 
+	public int getPassedTestCount() 
 	{
-		return this.passed;
+		return this.passedTestCount;
 	}
 	
-	public int getFailedTests() 
+	public int getFailedTestCount() 
 	{
-		return this.failed;
+		return this.failedTestCount;
 	}
 	
-	public int getTotalTests() 
+	public int getTotalTestCount() 
 	{
-		return this.totalTests;
+		return this.totalTestCount;
 	}
 	
 	public ArrayList<TestSuite> getTestSuites() 

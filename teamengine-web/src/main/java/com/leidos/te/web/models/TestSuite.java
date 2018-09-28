@@ -25,6 +25,7 @@ public class TestSuite
 	private String startDate = "";
 	private String endDate = "";
 	
+	@JacksonXmlProperty(localName = "values")
 	private String testUrl = "";
 
 	@JacksonXmlProperty(localName = "groups")
@@ -89,10 +90,6 @@ public class TestSuite
 		return testUrl;
 	}
 
-	public void setTestUrl(String url) 
-	{
-		this.testUrl = url;
-	}
     
     public ArrayList<Test> getTests() 
     {

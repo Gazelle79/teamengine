@@ -45,7 +45,7 @@ public class TestMethod
 
 	@JacksonXmlProperty(localName = "exception")
 	@JacksonXmlElementWrapper(useWrapping = false)
-	private ArrayList<ExceptionType> exceptions = null;
+	private ArrayList<ExceptionType> exceptions = new ArrayList<ExceptionType>();
 	
 	@JacksonXmlProperty(localName = "attributes")
 	@JacksonXmlElementWrapper(useWrapping = false)
