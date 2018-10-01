@@ -25,18 +25,7 @@ public class AdvancedReportingServlet extends javax.servlet.http.HttpServlet imp
 	boolean allDirectoriesCreated = false;
 	private XmlMapper xmlMapper = new XmlMapper();
 	
-	private File userLogDirectory = null;
-	private File htmlReportDirectory = null;
-	private File resultReportDirectory = null;
-	private File testNgDirectory = null;
-	private File testNgResultsDirectory = null;
-	private String testNgResultsPath = ""; //path to Test Results NG.xml
 	
-	private File[] htmlReportDirectories = null;
-	private File[] resultReportDirectories = null;
-	private File[] testNgDirectories = null;
-	private File[] testNgResultsDirectories = null;
-	private String[] testNgResultsPaths = null; //path to Test Results NG.xml
 	
 	public void init() throws ServletException 
 	{
@@ -51,12 +40,28 @@ public class AdvancedReportingServlet extends javax.servlet.http.HttpServlet imp
 		sessionId = request.getParameter("sessionId");
 		
 		String userName = request.getRemoteUser();
-		allDirectoriesCreated = this.getUserDirectoriesForSingleSession(userName);
-		TestResults testResults = this.GetTestResults();
+		
+		//Create a user based on a username.
+		//Create all of this user's sessions.
+		User thisUser = new User();
+		thisUser.CreateUser(userName, sessionId, Conf);
+		TestResults testResults = new TestResults();
+		
+		
+		for(Session thisSession : thisUser.getSessions())
+		{
+			String testNgResultsFilepath = thisSession.getTestNgResultsPath();
+			if(!testNgResultsFilepath.equals("")) 
+			{
+			testResults = this.GetTestResults(testNgResultsFilepath);
+			thisSession.getTestResults().add(testResults);
+			}
+		}
 				
 		//Pass Beans
 		request.setAttribute("sessionId", sessionId);
 		request.setAttribute("testResults", testResults);
+		request.setAttribute("user", thisUser);
 		
 		RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/advancedReporting.jsp");
 		dispatcher.forward(request, response);
@@ -70,54 +75,11 @@ public class AdvancedReportingServlet extends javax.servlet.http.HttpServlet imp
 		this.doGet(request, response);
 	}
 		
-	private boolean getUserDirectoriesForSingleSession(String userName)
-	{
-		boolean allDirectoriesCreated = false;
 		
-		this.userLogDirectory = new File(Conf.getUsersDir(), userName);
-		this.htmlReportDirectory = new File(userLogDirectory, sessionId + System.getProperty("file.separator") + "html");
-		this.resultReportDirectory = new File(userLogDirectory, sessionId + System.getProperty("file.separator") + "result");
-		this.testNgDirectory = new File(userLogDirectory, sessionId + System.getProperty("file.separator") + "testng");
-		
-		
-		if(testNgDirectory != null)
-		{
-			//Get folders in testNG
-			String[] directories = testNgDirectory.list(new FilenameFilter() 
-			{
-				@Override
-				public boolean accept(File current, String name) 
-				{
-					return new File(current, name).isDirectory();
-				}
-			});
-			
-			//Loop through folders in testNG looking for testng-results.xml
-			for(String testFolder : directories) 
-			{
-				if(testFolder != null)
-				{
-					//Test for testing-results.xml
-					testNgResultsDirectory = new File(testNgDirectory, testFolder + System.getProperty("file.separator") + "testng-results.xml");
-					if(testNgResultsDirectory.exists()) 
-			 		{ 
-			 			this.testNgResultsPath = testNgResultsDirectory.getAbsolutePath();
-			 		}
-				}
-			}
-		}
-		
-		if( this.userLogDirectory.exists() && this.htmlReportDirectory.exists() && this.resultReportDirectory.exists() && this.testNgDirectory.exists()
-				&& this.testNgResultsDirectory.exists())
-		{ allDirectoriesCreated = true; }
-		
-		return allDirectoriesCreated;
-	}
-		
-	public TestResults GetTestResults() throws IOException
+	public TestResults GetTestResults(String testNgResultsFilepath) throws IOException
 	{
 		xmlMapper = new XmlMapper();
-		String xml = inputStreamToString(new FileInputStream(testNgResultsPath));
+		String xml = inputStreamToString(new FileInputStream(testNgResultsFilepath));
 		TestResults testNgResults = xmlMapper.readValue(xml, TestResults.class);
 		if(testNgResults.getTotalTestCount() > 0)
 		{
@@ -126,27 +88,7 @@ public class AdvancedReportingServlet extends javax.servlet.http.HttpServlet imp
 		return testNgResults;
 	}
 	
-	//TODO: Come back to getting URI parameter using Jackson.
-	private void GetTestUrl(TestResults thisTestResults) throws IOException
-	{
-		if(thisTestResults.getTestSuites().size() > 0)
-		{
-			File xmlLogFilepath = new File(userLogDirectory.getAbsolutePath() + System.getProperty("file.separator") + "log.xml");
-			if (xmlLogFilepath.exists())
-			{
-				xmlMapper = new XmlMapper();
-				String xml = inputStreamToString(new FileInputStream(xmlLogFilepath));
-				for(TestSuite thisTestSuite : thisTestResults.getTestSuites())
-				{  
-					thisTestSuite = xmlMapper.readValue(xml, TestSuite.class);
-				}
-			
-			}
-		}
-	}
-
-	
-	
+		
 	private static String inputStreamToString(InputStream is) throws IOException 
 	{
 	    StringBuilder sb = new StringBuilder();

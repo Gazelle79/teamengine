@@ -73,6 +73,8 @@
       
       <br />
       <a href="createSession.jsp">Create a new session</a>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="advancedReporting?sessionId=all"> View test results for ALL sessions </a>
       <br />
 	  <br />
 	  
@@ -107,7 +109,7 @@
                       out.println("<td>"
                 	  		  + testSession.getSessionId() + " <a href=\"viewSessionLog.jsp?session=" + testSession.getSessionId() + "\"> Standard report </a>"
                 	  		  + " || "
-                	  		  + "<a href=\"advancedReporting?sessionId=" + testSession.getSessionId() + "\"> Advanced report </a>"
+                	  		  + "<a href=\"advancedReporting?sessionId=" + testSession.getSessionId() + "\"> Advanced report </a>  "
                     		  + "</td> ");
                       
                       
@@ -116,11 +118,19 @@
                       out.println("<td>" + testSession.getCurrentDate() + "</td>");
                       out.println("<td>" + testSession.getDescription() + "</td>");
                       out.println("<td class='trash-noBorder' ><img src='images/trash.png' style='height:17px;' id='" + testSession.getSessionId() + "' onclick='deleteSession(this.id)'/></td>");
-                      out.println("</tr>");
+                      out.println("</tr>");                     
               		}
+                %>
+                
+                <%  
+                out.println("<tr style='height:23px;'>");
+                out.println("<td>" + "<a href=\"advancedReporting?sessionId=all>" + "View test results for ALL sessions </a>");
+                out.println("</td></tr>");
                 %>
               </table>
             </td>
+            
+            
             <td>
               <table border="0">
                 <% // out.println("<tr style='height:22px;'>");
