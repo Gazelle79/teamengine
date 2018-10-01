@@ -5,6 +5,7 @@
 
 <jsp:useBean id="sessionId" class="java.lang.String" scope="request" />
 <jsp:useBean id="testResults" class="com.leidos.te.web.models.TestResults" scope="request" />
+<jsp:useBean id="thisUser" class="com.leidos.te.web.models.User" scope="request" />
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
@@ -69,6 +70,7 @@ Skipped: #666
 	<%@ include file="header.jsp"%>
 	
 	<!-- <form action="advancedReporting" method="post">  -->
+
 			<input name ="action" type="hidden" id="action" value="update"></input>
 			<input name="sessionId" type="hidden" id="sessionId" value="<%= sessionId  %>"></input>	
 			<h2>Test Results for session <%= sessionId %></h2>
